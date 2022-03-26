@@ -25,17 +25,20 @@ namespace Shopping.Data.Repositories
             var entry = await dbset.AddAsync(entity);
             return entry.Entity;
         }
+        
         public async Task<T> UpdateAsync(T entity)
         {
             var entry = dbset.Update(entity);
             dbcontext.SaveChangesAsync();
             return entry.Entity;
         }
+        
         public async Task<T> GetAsync(Expression<Func<T, bool>> expression)
         {
             var entity = await dbset.FirstOrDefaultAsync(expression);
             return entity;
         }
+        
         public async Task<bool> Delete(Expression<Func<T, bool>> expression)
         {
             var entity = await dbset.FirstOrDefaultAsync(expression);
@@ -46,6 +49,7 @@ namespace Shopping.Data.Repositories
             dbcontext.SaveChangesAsync();
             return true;
         }
+        
         public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> expression = null)
         {
             return expression is null ? dbset : dbset.Where(expression);

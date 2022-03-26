@@ -31,6 +31,7 @@ namespace Shopping.Service.Services
             baseResponse.Data = temp;
             return baseResponse;
         }
+
         public async Task<BaseResponse<Customer>> CreateAsync(CustomerCreateViewModel customer)
         {
             BaseResponse<Customer> baseResponse = new BaseResponse<Customer>();
@@ -53,6 +54,7 @@ namespace Shopping.Service.Services
             baseResponse.Data = await customerRepository.CreateAsync(customerMap);
             return baseResponse;
         }
+        
         public async Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Customer, bool>> expression)
         {
             BaseResponse<bool> baseResponse = new BaseResponse<bool>();
@@ -69,6 +71,7 @@ namespace Shopping.Service.Services
 
             return baseResponse;
         }
+        
         public async Task<BaseResponse<Customer>> GetAsync(Expression<Func<Customer, bool>> expression)
         {
             BaseResponse<Customer> baseResponse = new BaseResponse<Customer>();
@@ -84,6 +87,7 @@ namespace Shopping.Service.Services
             return baseResponse;
 
         }
+        
         public async Task<BaseResponse<IQueryable<Customer>>> GetAllAsync(Expression<Func<Customer, bool>> expression = null)
         {
             BaseResponse<IQueryable<Customer>> baseResponse = new BaseResponse<IQueryable<Customer>>();
