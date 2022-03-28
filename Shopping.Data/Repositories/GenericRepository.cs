@@ -54,7 +54,5 @@ namespace Shopping.Data.Repositories
         {
             return expression is null ? dbset : dbset.Where(expression);
         }
-
-
     }
 }

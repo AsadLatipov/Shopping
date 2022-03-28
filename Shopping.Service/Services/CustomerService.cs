@@ -16,7 +16,7 @@ namespace Shopping.Service.Services
         public CustomerService(ICustomerRepository customerRepository) =>
             this.customerRepository = customerRepository;
 
-        public async Task<BaseResponse<Customer>> UpdateAsync(Customer customer)
+        public async ValueTask<BaseResponse<Customer>> UpdateAsync(Customer customer)
         {
             BaseResponse<Customer> baseResponse = new BaseResponse<Customer>();
 
@@ -32,7 +32,7 @@ namespace Shopping.Service.Services
             return baseResponse;
         }
 
-        public async Task<BaseResponse<Customer>> CreateAsync(CustomerCreateViewModel customer)
+        public async ValueTask<BaseResponse<Customer>> CreateAsync(CustomerCreateViewModel customer)
         {
             BaseResponse<Customer> baseResponse = new BaseResponse<Customer>();
             var entity = customerRepository.GetAsync(obj => obj.Phone == customer.Phone);
@@ -55,7 +55,7 @@ namespace Shopping.Service.Services
             return baseResponse;
         }
         
-        public async Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Customer, bool>> expression)
+        public async ValueTask<BaseResponse<bool>> DeleteAsync(Expression<Func<Customer, bool>> expression)
         {
             BaseResponse<bool> baseResponse = new BaseResponse<bool>();
             var entity = await customerRepository.GetAsync(expression);
@@ -72,7 +72,7 @@ namespace Shopping.Service.Services
             return baseResponse;
         }
         
-        public async Task<BaseResponse<Customer>> GetAsync(Expression<Func<Customer, bool>> expression)
+        public async ValueTask<BaseResponse<Customer>> GetAsync(Expression<Func<Customer, bool>> expression)
         {
             BaseResponse<Customer> baseResponse = new BaseResponse<Customer>();
 
@@ -88,7 +88,7 @@ namespace Shopping.Service.Services
 
         }
         
-        public async Task<BaseResponse<IQueryable<Customer>>> GetAllAsync(Expression<Func<Customer, bool>> expression = null)
+        public async ValueTask<BaseResponse<IQueryable<Customer>>> GetAllAsync(Expression<Func<Customer, bool>> expression = null)
         {
             BaseResponse<IQueryable<Customer>> baseResponse = new BaseResponse<IQueryable<Customer>>();
             var entities = await customerRepository.GetAllAsync(expression);
