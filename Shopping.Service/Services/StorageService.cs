@@ -12,14 +12,14 @@ namespace Shopping.Service.Services
 {
     public class StorageService : IStorageService
     {
-        private readonly IStorageRepository storageRepository;
-        public StorageService(IStorageRepository storageRepository) =>
-            this.storageRepository = storageRepository;
+        private readonly IUnitOfWork unitOfWork;
+        public StorageService(IUnitOfWork unitOfWork) =>
+            this.unitOfWork = unitOfWork;
 
         public async Task<BaseResponse<IEnumerable<Storage>>> GetAllAsync(Expression<Func<Storage, bool>> expression = null)
         {
             BaseResponse<IEnumerable<Storage>> baseResponse = new BaseResponse<IEnumerable<Storage>>();
-            var entities = await storageRepository.GetAllAsync(expression);
+            var entities = await unitOfWork.Storage.GetAllAsync(expression);
             var temp = entities.Include(x => x.Product);
             baseResponse.Data = temp;
             return baseResponse;

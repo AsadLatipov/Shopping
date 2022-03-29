@@ -7,11 +7,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shopping.Domain.Entities.Storages
 {
-    [Table("storages")]
     public class Storage : IAuditable
     {
-        [Key]
-        [Required]
         public Guid Id { get; set; }
         public Guid ProductId { get; set; }
 

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Shopping.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService orderService;
@@ -50,7 +50,7 @@ namespace Shopping.Api.Controllers
             return StatusCode(entity.Code ?? entity.Error.Code.Value, entity);
         }
 
-        [HttpDelete("{productId}")]
+        [HttpDelete("{orderId}")]
         public async ValueTask<ActionResult<BaseResponse<bool>>> CreateAsync(Guid orderId)
         {
             var entity = await orderService.DeleteAsync(obj => obj.Id == orderId);

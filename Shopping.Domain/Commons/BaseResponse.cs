@@ -1,7 +1,8 @@
-﻿using System.Text.Json.Serialization;
+﻿using Newtonsoft.Json;
 
 namespace Shopping.Domain.Commons
 {
+
     public class BaseResponse<T>
     {
         [JsonIgnore]

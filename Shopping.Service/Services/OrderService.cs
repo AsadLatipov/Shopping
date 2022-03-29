@@ -12,24 +12,25 @@ namespace Shopping.Service.Services
 {
     public class OrderService : IOrderService
     {
-        private readonly IOrderRepository orderRepository;
-        public OrderService(IOrderRepository orderRepository) =>
-            this.orderRepository = orderRepository;
+        private readonly IUnitOfWork unitOfWork;
+        public OrderService(IUnitOfWork unitOfWork) =>
+            this.unitOfWork = unitOfWork;
 
 
         public async Task<BaseResponse<Order>> UpdateAsync(Order customer)
         {
             BaseResponse<Order> baseResponse = new BaseResponse<Order>();
 
-            var entity = await orderRepository.GetAsync(obj => obj.Id == customer.Id);
+            var entity = await unitOfWork.Orders.GetAsync(obj => obj.Id == customer.Id);
             if (entity is null)
             {
                 baseResponse.Error = new ErrorModel(404, "Order not found");
                 return baseResponse;
             }
 
-            var temp = await orderRepository.UpdateAsync(customer);
+            var temp = await unitOfWork.Orders.UpdateAsync(customer);
             baseResponse.Data = temp;
+            await unitOfWork.SaveChangeAsync();
             return baseResponse;
         }
         
@@ -45,7 +46,8 @@ namespace Shopping.Service.Services
                     ProductId = customer.ProductId,
                     TotalAmount = customer.TotalAmount,
                 };
-                baseResponse.Data = await orderRepository.CreateAsync(orderMap);
+                baseResponse.Data = await unitOfWork.Orders.CreateAsync(orderMap);
+                await unitOfWork.SaveChangeAsync();
                 return baseResponse;
             }
             catch (Exception ex)
@@ -59,7 +61,7 @@ namespace Shopping.Service.Services
         {
             BaseResponse<Order> baseResponse = new BaseResponse<Order>();
 
-            var entity = await orderRepository.GetAsync(expression);
+            var entity = await unitOfWork.Orders.GetAsync(expression);
             if (entity is null)
             {
                 baseResponse.Error = new ErrorModel(404, "Order not found");
@@ -73,7 +75,7 @@ namespace Shopping.Service.Services
         public async Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Order, bool>> expression)
         {
             BaseResponse<bool> baseResponse = new BaseResponse<bool>();
-            var entity = await orderRepository.GetAsync(expression);
+            var entity = await unitOfWork.Orders.GetAsync(expression);
             if (entity is null)
             {
                 baseResponse.Error = new ErrorModel(404, "Order not Found");
@@ -81,7 +83,7 @@ namespace Shopping.Service.Services
             }
 
             entity.State = Domain.Enums.ItemState.deleted;
-            await orderRepository.UpdateAsync(entity);
+            await unitOfWork.Orders.UpdateAsync(entity);
             baseResponse.Data = true;
 
             return baseResponse;
@@ -90,7 +92,7 @@ namespace Shopping.Service.Services
         public async Task<BaseResponse<IQueryable<Order>>> GetAllAsync(Expression<Func<Order, bool>> expression = null)
         {
             BaseResponse<IQueryable<Order>> baseResponse = new BaseResponse<IQueryable<Order>>();
-            var entities = await orderRepository.GetAllAsync(expression);
+            var entities = await unitOfWork.Orders.GetAllAsync(expression);
             baseResponse.Data = entities;
             return baseResponse;
         }

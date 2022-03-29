@@ -6,12 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shopping.Data.IRepositories
 {
-    public interface IOrderRepository
+    public interface IOrderRepository : IGenericRepository<Order>
     {
-        Task<Order> CreateAsync(Order entity);
-        Task<Order> UpdateAsync(Order entity);
-        Task<bool> Delete(Expression<Func<Order, bool>> expression);
-        Task<Order> GetAsync(Expression<Func<Order, bool>> expression);
-        Task<IQueryable<Order>> GetAllAsync(Expression<Func<Order, bool>> expression = null);
     }
 }

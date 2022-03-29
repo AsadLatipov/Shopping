@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace Shopping.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class ProductsController : ControllerBase
     {
         private readonly IProductService productService;

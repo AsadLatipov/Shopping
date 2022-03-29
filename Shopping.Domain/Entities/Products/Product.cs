@@ -6,11 +6,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shopping.Domain.Entities.Products
 {
-    [Table("products")]
     public class Product : IAuditable
     {
-        [Key]
-        [Required]
 
         public Guid Id { get; set; }
         public string Name { get; set; }

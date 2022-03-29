@@ -4,6 +4,7 @@ using Shopping.Domain.Entities.Customers;
 using Shopping.Service.Interfaces;
 using Shopping.Service.ViewModels.Customers;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -12,30 +13,31 @@ namespace Shopping.Service.Services
 {
     public class CustomerService : ICustomerService
     {
-        private readonly ICustomerRepository customerRepository;
-        public CustomerService(ICustomerRepository customerRepository) =>
-            this.customerRepository = customerRepository;
+        private readonly IUnitOfWork unitOfWork;
+        public CustomerService(IUnitOfWork unitOfWork) =>
+            this.unitOfWork = unitOfWork;
 
-        public async ValueTask<BaseResponse<Customer>> UpdateAsync(Customer customer)
+        public async Task<BaseResponse<Customer>> UpdateAsync(Customer customer)
         {
             BaseResponse<Customer> baseResponse = new BaseResponse<Customer>();
 
-            var entity = await customerRepository.GetAsync(obj => obj.Id == customer.Id);
+            var entity = await unitOfWork.Customers.GetAsync(obj => obj.Id == customer.Id);
             if (entity is null)
             {
                 baseResponse.Error = new ErrorModel(404, "Customer not found");
                 return baseResponse;
             }
 
-            var temp = await customerRepository.UpdateAsync(customer);
+            var temp = await unitOfWork.Customers.UpdateAsync(customer);
+            await unitOfWork.SaveChangeAsync();
             baseResponse.Data = temp;
             return baseResponse;
         }
 
-        public async ValueTask<BaseResponse<Customer>> CreateAsync(CustomerCreateViewModel customer)
+        public async Task<BaseResponse<Customer>> CreateAsync(CustomerCreateViewModel customer)
         {
             BaseResponse<Customer> baseResponse = new BaseResponse<Customer>();
-            var entity = customerRepository.GetAsync(obj => obj.Phone == customer.Phone);
+            var entity = unitOfWork.Customers.GetAsync(obj => obj.Phone == customer.Phone);
 
             if (entity == null)
             {
@@ -45,20 +47,22 @@ namespace Shopping.Service.Services
 
             var customerMap = new Customer()
             {
+                Id = customer.Id,
                 FirstName = customer.FirstName,
                 LastName = customer.LastName,
                 Email = customer.Email,
                 Phone = customer.Phone
             };
 
-            baseResponse.Data = await customerRepository.CreateAsync(customerMap);
+            baseResponse.Data = await unitOfWork.Customers.CreateAsync(customerMap);
+            await unitOfWork.SaveChangeAsync();
             return baseResponse;
         }
         
-        public async ValueTask<BaseResponse<bool>> DeleteAsync(Expression<Func<Customer, bool>> expression)
+        public async Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Customer, bool>> expression)
         {
             BaseResponse<bool> baseResponse = new BaseResponse<bool>();
-            var entity = await customerRepository.GetAsync(expression);
+            var entity = await unitOfWork.Customers.GetAsync(expression);
             if (entity is null)
             {
                 baseResponse.Error = new ErrorModel(404, "Customer not Found");
@@ -66,17 +70,18 @@ namespace Shopping.Service.Services
             }
 
             entity.State = Domain.Enums.ItemState.deleted;
-            await customerRepository.UpdateAsync(entity);
+            await unitOfWork.Customers.UpdateAsync(entity);
+            await unitOfWork.SaveChangeAsync();
             baseResponse.Data = true;
 
             return baseResponse;
         }
         
-        public async ValueTask<BaseResponse<Customer>> GetAsync(Expression<Func<Customer, bool>> expression)
+        public async Task<BaseResponse<Customer>> GetAsync(Expression<Func<Customer, bool>> expression)
         {
             BaseResponse<Customer> baseResponse = new BaseResponse<Customer>();
 
-            var entity = await customerRepository.GetAsync(expression);
+            var entity = await unitOfWork.Customers.GetAsync(expression);
             if (entity is null)
             {
                 baseResponse.Error = new ErrorModel(404, "Customer not found");
@@ -88,10 +93,10 @@ namespace Shopping.Service.Services
 
         }
         
-        public async ValueTask<BaseResponse<IQueryable<Customer>>> GetAllAsync(Expression<Func<Customer, bool>> expression = null)
+        public async Task<BaseResponse<IEnumerable<Customer>>> GetAllAsync(Expression<Func<Customer, bool>> expression = null)
         {
-            BaseResponse<IQueryable<Customer>> baseResponse = new BaseResponse<IQueryable<Customer>>();
-            var entities = await customerRepository.GetAllAsync(expression);
+            BaseResponse<IEnumerable<Customer>> baseResponse = new BaseResponse<IEnumerable<Customer>>();
+            var entities = await unitOfWork.Customers.GetAllAsync(expression);
             baseResponse.Data = entities;
             return baseResponse;
 

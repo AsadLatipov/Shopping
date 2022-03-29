@@ -11,17 +11,17 @@ using System.Threading.Tasks;
 namespace Shopping.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class CustomersController : ControllerBase
+    [Route("[controller]")]
+    public class customersController : ControllerBase
     {
         private readonly ICustomerService customerService;
 
-        public CustomersController(ICustomerService customerService) => 
+        public customersController(ICustomerService customerService) =>
             this.customerService = customerService;
 
 
         [HttpPost]
-        public async ValueTask<ActionResult<BaseResponse<Customer>>> CreateAsync(CustomerCreateViewModel customer)
+        public async Task<ActionResult<BaseResponse<Customer>>> CreateAsync(CustomerCreateViewModel customer)
         {
             var entity = await customerService.CreateAsync(customer);
 
@@ -29,7 +29,7 @@ namespace Shopping.Api.Controllers
         }
 
         [HttpGet("{customerId}")]
-        public async ValueTask<ActionResult<BaseResponse<Customer>>> GetAsync(Guid customerId)
+        public async Task<ActionResult<BaseResponse<Customer>>> GetAsync(Guid customerId)
         {
             var entity = await customerService.GetAsync(obj => obj.Id == customerId);
 
@@ -37,7 +37,7 @@ namespace Shopping.Api.Controllers
         }
 
         [HttpGet]
-        public async ValueTask<ActionResult<BaseResponse<IQueryable<Customer>>>> GetAllAsync()
+        public async Task<ActionResult<BaseResponse<IQueryable<Customer>>>> GetAllAsync()
         {
             var entity = await customerService.GetAllAsync();
 
@@ -45,7 +45,7 @@ namespace Shopping.Api.Controllers
         }
 
         [HttpPut]
-        public async ValueTask<ActionResult<BaseResponse<Customer>>> UpdateAsync(Customer customer)
+        public async Task<ActionResult<BaseResponse<Customer>>> UpdateAsync(Customer customer)
         {
             var entity = await customerService.UpdateAsync(customer);
 
@@ -53,7 +53,7 @@ namespace Shopping.Api.Controllers
         }
 
         [HttpDelete("{customerId}")]
-        public async ValueTask<ActionResult<BaseResponse<bool>>> DeleteAsync(Guid customerId)
+        public async Task<ActionResult<BaseResponse<bool>>> DeleteAsync(Guid customerId)
         {
             var entity = await customerService.DeleteAsync(obj => obj.Id == customerId);
 

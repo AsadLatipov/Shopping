@@ -6,12 +6,7 @@ using System.Threading.Tasks;
 
 namespace Shopping.Data.IRepositories
 {
-    public interface IStorageRepository
+    public interface IStorageRepository : IGenericRepository<Storage>
     {
-        Task<Storage> CreateAsync(Storage entity);
-        Task<Storage> UpdateAsync(Storage entity);
-        Task<bool> Delete(Expression<Func<Storage, bool>> expression);
-        Task<Storage> GetAsync(Expression<Func<Storage, bool>> expression);
-        Task<IQueryable<Storage>> GetAllAsync(Expression<Func<Storage, bool>> expression = null);
     }
 }

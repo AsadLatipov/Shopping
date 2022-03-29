@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace Shopping.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class StorageController : ControllerBase
     {
         private readonly IStorageService storageService;

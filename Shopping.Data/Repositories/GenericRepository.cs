@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.EntityFrameworkCore;
 using Shopping.Data.Contexts;
 using Shopping.Data.IRepositories;
 using System;
@@ -11,12 +12,12 @@ namespace Shopping.Data.Repositories
     public class GenericRepository<T> : IGenericRepository<T> where T : class
     {
 #pragma warning disable
-        private readonly MYDBContext dbcontext;
-        private readonly DbSet<T> dbset;
-        public GenericRepository(MYDBContext mYDBContext)
+        internal  MYDBContext dbcontext;
+        internal  DbSet<T> dbset;
+        public GenericRepository(MYDBContext dbcontext)
         {
-            dbcontext = mYDBContext;
-            dbset = dbcontext.Set<T>();
+            this.dbcontext = dbcontext;
+            this.dbset = dbcontext.Set<T>();
         }
 
 
@@ -29,7 +30,6 @@ namespace Shopping.Data.Repositories
         public async Task<T> UpdateAsync(T entity)
         {
             var entry = dbset.Update(entity);
-            dbcontext.SaveChangesAsync();
             return entry.Entity;
         }
         
@@ -46,13 +46,13 @@ namespace Shopping.Data.Repositories
             if (entity is null) return false;
 
             dbset.Remove(entity);
-            dbcontext.SaveChangesAsync();
             return true;
         }
         
         public async Task<IQueryable<T>> GetAllAsync(Expression<Func<T, bool>> expression = null)
         {
             return expression is null ? dbset : dbset.Where(expression);
+
         }
     }
 }

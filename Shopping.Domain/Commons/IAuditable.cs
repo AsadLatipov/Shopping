@@ -1,5 +1,6 @@
 ﻿using Shopping.Domain.Enums;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Shopping.Domain.Commons
 {

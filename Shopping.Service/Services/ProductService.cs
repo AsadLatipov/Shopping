@@ -13,30 +13,26 @@ namespace Shopping.Service.Services
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository productRepository;
-        private readonly IStorageRepository storageRepository;
+        private readonly IUnitOfWork unitOfWork;
 
-        public ProductService(
-            IProductRepository productRepository,
-            IStorageRepository storageRepository)
-        {
-            this.productRepository = productRepository;
-            this.storageRepository = storageRepository;
-        }
+        public ProductService(IUnitOfWork unitOfWork) =>
+            this.unitOfWork = unitOfWork;
+       
 
         public async Task<BaseResponse<Product>> UpdateAsync(Product customer)
         {
             BaseResponse<Product> baseResponse = new BaseResponse<Product>();
 
-            var entity = await productRepository.GetAsync(obj => obj.Id == customer.Id);
+            var entity = await unitOfWork.Products.GetAsync(obj => obj.Id == customer.Id);
             if (entity is null)
             {
                 baseResponse.Error = new ErrorModel(404, "Product not found");
                 return baseResponse;
             }
 
-            var temp = await productRepository.UpdateAsync(customer);
+            var temp = await unitOfWork.Products.UpdateAsync(customer);
             baseResponse.Data = temp;
+            await unitOfWork.SaveChangeAsync();
             return baseResponse;
         }
         
@@ -45,11 +41,11 @@ namespace Shopping.Service.Services
             BaseResponse<Product> baseResponse = new BaseResponse<Product>();
 
             // Check for exist Storage
-            var entity = await storageRepository.GetAsync(obj => obj.Product.Name == product.Name);
+            var entity = await unitOfWork.Storage.GetAsync(obj => obj.Product.Name == product.Name);
             if (entity is not null && entity.State != Domain.Enums.ItemState.deleted)
             {
                 entity.TotalCount += product.Count;
-                await storageRepository.UpdateAsync(entity);
+                await unitOfWork.Storage.UpdateAsync(entity);
 
                 baseResponse.Data = new Product()
                 {
@@ -72,16 +68,17 @@ namespace Shopping.Service.Services
                 ExpiredDate = product.ExpiredDate,
                 AdoptedDate = product.AdoptedDate,
             };
-            var temp = await productRepository.CreateAsync(productMap);
+            var temp = await unitOfWork.Products.CreateAsync(productMap);
 
             //Add to storage table
-            await storageRepository.CreateAsync(new Storage
+            await unitOfWork.Storage.CreateAsync(new Storage
             {
                 ProductId = temp.Id,
                 TotalCount = product.Count
             });
 
             baseResponse.Data = temp;
+            await unitOfWork.SaveChangeAsync();
             return baseResponse;
         }
         
@@ -89,15 +86,16 @@ namespace Shopping.Service.Services
         {
             BaseResponse<bool> baseResponse = new BaseResponse<bool>();
 
-            var productMap = await productRepository.GetAsync(expression);
+            var productMap = await unitOfWork.Products.GetAsync(expression);
             if (productMap is null)
             {
                 baseResponse.Error = new ErrorModel(404, "Not found");
                 return baseResponse;
             }
 
-            await productRepository.Delete(expression);
-            baseResponse.Data = await storageRepository.Delete(obj => obj.Id == productMap.Id);
+            await unitOfWork.Products.Delete(expression);
+            baseResponse.Data = await unitOfWork.Storage.Delete(obj => obj.Id == productMap.Id);
+            await unitOfWork.SaveChangeAsync();
 
             return baseResponse;
 
@@ -107,7 +105,7 @@ namespace Shopping.Service.Services
         {
             BaseResponse<Product> baseResponse = new BaseResponse<Product>();
 
-            var entity = await productRepository.GetAsync(expression);
+            var entity = await unitOfWork.Products.GetAsync(expression);
             if (entity is null)
             {
                 baseResponse.Error = new ErrorModel(404, "Product not found");
@@ -121,11 +119,9 @@ namespace Shopping.Service.Services
         public async Task<BaseResponse<IQueryable<Product>>> GetAllAsync(Expression<Func<Product, bool>> expression = null)
         {
             BaseResponse<IQueryable<Product>> baseResponse = new BaseResponse<IQueryable<Product>>();
-            var entities = await productRepository.GetAllAsync(expression);
+            var entities = await unitOfWork.Products.GetAllAsync(expression);
             baseResponse.Data = entities;
             return baseResponse;
         }
-
-
     }
 }

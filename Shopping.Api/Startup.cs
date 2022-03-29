@@ -42,10 +42,7 @@ namespace Shopping.Api
             //Add my service
 
             //Repositories
-            services.AddScoped<ICustomerRepository, CustomerRepository>();
-            services.AddScoped<IOrderRepository, OrderRepository>();
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<IStorageRepository, StorageRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             //Services
             services.AddScoped<ICustomerService, CustomerService>();
