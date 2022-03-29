@@ -37,9 +37,9 @@ namespace Shopping.Service.Services
             BaseResponse<Customer> baseResponse = new BaseResponse<Customer>();
             var entity = customerRepository.GetAsync(obj => obj.Phone == customer.Phone);
 
-            if (entity is not null)
+            if (entity == null)
             {
-                baseResponse.Error = new ErrorModel(400, "Cutomer is exsist");
+                baseResponse.Error = new ErrorModel(400, "Customer is exsist");
                 return baseResponse;
             }
 

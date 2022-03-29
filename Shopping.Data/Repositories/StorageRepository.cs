@@ -4,7 +4,7 @@ using Shopping.Domain.Entities.Storages;
 
 namespace Shopping.Data.Repositories
 {
-    internal class StorageRepository : GenericRepository<Storage>, IStorageRepository
+    public class StorageRepository : GenericRepository<Storage>, IStorageRepository
     {
         public StorageRepository(MYDBContext mYDBContext) : base(mYDBContext)
         {

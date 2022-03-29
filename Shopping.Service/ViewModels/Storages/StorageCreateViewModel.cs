@@ -1,6 +1,6 @@
 ﻿namespace Shopping.Service.ViewModels.Storages
 {
-    publiclass StorageCreateViewModel
+    public class StorageCreateViewModel
     {
     }
 }

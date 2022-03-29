@@ -8,9 +8,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shopping.Domain.Entities.Orders
 {
+    [Table("orders")]
     public class Order : IAuditable
     {
         [Key]
+        [Required]
+
         public Guid Id { get; set; }
         public DateTime OrderedDate { get; set; } = DateTime.Now;
         public Guid CustomerId { get; set; }
