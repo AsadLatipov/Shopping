@@ -63,10 +63,11 @@ namespace Shopping.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Shopping.Api v1"));
             }
+            app.UseRouting();
+
 
             app.UseHttpsRedirection();
 
-            app.UseRouting();
 
             app.UseAuthorization();
 
