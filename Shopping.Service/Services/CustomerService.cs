@@ -29,7 +29,7 @@ namespace Shopping.Service.Services
             }
 
             var temp = await unitOfWork.Customers.UpdateAsync(customer);
-            await unitOfWork.SaveChangeAsync();
+            await unitOfWork.SaveChangesAsync();
             baseResponse.Data = temp;
             return baseResponse;
         }
@@ -55,7 +55,7 @@ namespace Shopping.Service.Services
             };
 
             baseResponse.Data = await unitOfWork.Customers.CreateAsync(customerMap);
-            await unitOfWork.SaveChangeAsync();
+            await unitOfWork.SaveChangesAsync();
             return baseResponse;
         }
         
@@ -71,7 +71,7 @@ namespace Shopping.Service.Services
 
             entity.State = Domain.Enums.ItemState.deleted;
             await unitOfWork.Customers.UpdateAsync(entity);
-            await unitOfWork.SaveChangeAsync();
+            await unitOfWork.SaveChangesAsync();
             baseResponse.Data = true;
 
             return baseResponse;

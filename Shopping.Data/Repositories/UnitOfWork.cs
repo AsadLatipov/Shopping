@@ -32,7 +32,7 @@ namespace Shopping.Data.Repositories
             GC.SuppressFinalize(this);
         }
 
-        public async Task SaveChangeAsync()
+        public async Task SaveChangesAsync()
         {
             await context.SaveChangesAsync();
         }

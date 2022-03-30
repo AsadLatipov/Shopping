@@ -12,7 +12,7 @@ namespace Shopping.Data.IRepositories
         IOrderRepository Orders { get; }
         IProductRepository Products { get; }
         IStorageRepository Storage { get; }
-        Task SaveChangeAsync();
+        Task SaveChangesAsync();
 
     }
 }

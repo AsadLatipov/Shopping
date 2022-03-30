@@ -30,7 +30,7 @@ namespace Shopping.Service.Services
 
             var temp = await unitOfWork.Orders.UpdateAsync(customer);
             baseResponse.Data = temp;
-            await unitOfWork.SaveChangeAsync();
+            await unitOfWork.SaveChangesAsync();
             return baseResponse;
         }
         
@@ -47,7 +47,7 @@ namespace Shopping.Service.Services
                     TotalAmount = customer.TotalAmount,
                 };
                 baseResponse.Data = await unitOfWork.Orders.CreateAsync(orderMap);
-                await unitOfWork.SaveChangeAsync();
+                await unitOfWork.SaveChangesAsync();
                 return baseResponse;
             }
             catch (Exception ex)
@@ -84,6 +84,7 @@ namespace Shopping.Service.Services
 
             entity.State = Domain.Enums.ItemState.deleted;
             await unitOfWork.Orders.UpdateAsync(entity);
+            await unitOfWork.SaveChangesAsync();
             baseResponse.Data = true;
 
             return baseResponse;

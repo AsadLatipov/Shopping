@@ -32,7 +32,7 @@ namespace Shopping.Service.Services
 
             var temp = await unitOfWork.Products.UpdateAsync(customer);
             baseResponse.Data = temp;
-            await unitOfWork.SaveChangeAsync();
+            await unitOfWork.SaveChangesAsync();
             return baseResponse;
         }
         
@@ -69,6 +69,7 @@ namespace Shopping.Service.Services
                 AdoptedDate = product.AdoptedDate,
             };
             var temp = await unitOfWork.Products.CreateAsync(productMap);
+            await unitOfWork.SaveChangesAsync();
 
             //Add to storage table
             await unitOfWork.Storage.CreateAsync(new Storage
@@ -78,7 +79,7 @@ namespace Shopping.Service.Services
             });
 
             baseResponse.Data = temp;
-            await unitOfWork.SaveChangeAsync();
+            await unitOfWork.SaveChangesAsync();
             return baseResponse;
         }
         
@@ -95,7 +96,7 @@ namespace Shopping.Service.Services
 
             await unitOfWork.Products.Delete(expression);
             baseResponse.Data = await unitOfWork.Storage.Delete(obj => obj.Id == productMap.Id);
-            await unitOfWork.SaveChangeAsync();
+            await unitOfWork.SaveChangesAsync();
 
             return baseResponse;
 
