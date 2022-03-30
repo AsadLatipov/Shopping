@@ -65,7 +65,6 @@ namespace Shopping.Api
             }
             app.UseRouting();
 
-
             app.UseHttpsRedirection();
 
 

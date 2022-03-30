@@ -26,8 +26,8 @@ namespace Shopping.Api.Controllers
             return StatusCode(entity.Code ?? entity.Error.Code.Value, entity);
         }
 
-        [HttpGet("{orderId}")]
-        public async ValueTask<ActionResult<BaseResponse<Order>>> GetAsync(Guid orderId)
+        [HttpGet("{order-id}")]
+        public async ValueTask<ActionResult<BaseResponse<Order>>> GetAsync([FromRoute(Name = "order-id")]Guid orderId)
         {
             var entity = await orderService.GetAsync(obj =>obj.Id == orderId);
 
@@ -50,8 +50,8 @@ namespace Shopping.Api.Controllers
             return StatusCode(entity.Code ?? entity.Error.Code.Value, entity);
         }
 
-        [HttpDelete("{orderId}")]
-        public async ValueTask<ActionResult<BaseResponse<bool>>> CreateAsync(Guid orderId)
+        [HttpDelete("{order-id}")]
+        public async ValueTask<ActionResult<BaseResponse<bool>>> CreateAsync([FromRoute(Name = "order-id")] Guid orderId)
         {
             var entity = await orderService.DeleteAsync(obj => obj.Id == orderId);
 

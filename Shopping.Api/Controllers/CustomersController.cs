@@ -4,7 +4,6 @@ using Shopping.Domain.Entities.Customers;
 using Shopping.Service.Interfaces;
 using Shopping.Service.ViewModels.Customers;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,14 +27,14 @@ namespace Shopping.Api.Controllers
             return StatusCode(entity.Code ?? entity.Error.Code.Value, entity);
         }
 
-        [HttpGet("{customerId}")]
-        public async Task<ActionResult<BaseResponse<Customer>>> GetAsync(Guid customerId)
+        [HttpGet("{customer-id}")]
+        public async Task<ActionResult<BaseResponse<Customer>>> GetAsync([FromRoute(Name = "customer-id")] Guid customerId)
         {
             var entity = await customerService.GetAsync(obj => obj.Id == customerId);
 
             return StatusCode(entity.Code ?? entity.Error.Code.Value, entity);
         }
-
+        
         [HttpGet]
         public async Task<ActionResult<BaseResponse<IQueryable<Customer>>>> GetAllAsync()
         {
@@ -52,8 +51,8 @@ namespace Shopping.Api.Controllers
             return StatusCode(entity.Code ?? entity.Error.Code.Value, entity);
         }
 
-        [HttpDelete("{customerId}")]
-        public async Task<ActionResult<BaseResponse<bool>>> DeleteAsync(Guid customerId)
+        [HttpDelete("{customer-id}")]
+        public async Task<ActionResult<BaseResponse<bool>>> DeleteAsync([FromRoute(Name = "customer-id")] Guid customerId)
         {
             var entity = await customerService.DeleteAsync(obj => obj.Id == customerId);
 
