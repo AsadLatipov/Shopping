@@ -1,7 +1,6 @@
 ﻿using Shopping.Data.Contexts;
 using Shopping.Data.IRepositories;
 using Shopping.Domain.Entities.Customers;
-using Shopping.Domain.Entities.Products;
 
 namespace Shopping.Data.Repositories
 {

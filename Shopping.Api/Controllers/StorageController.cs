@@ -13,7 +13,7 @@ namespace Shopping.Api.Controllers
     {
         private readonly IStorageService storageService;
 
-        public StorageController(IStorageService storageService) => 
+        public StorageController(IStorageService storageService) =>
             this.storageService = storageService;
 
         [HttpGet]

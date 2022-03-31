@@ -1,9 +1,6 @@
 ﻿using Shopping.Data.Contexts;
 using Shopping.Data.IRepositories;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Shopping.Data.Repositories
@@ -15,7 +12,7 @@ namespace Shopping.Data.Repositories
 
         public IOrderRepository Orders { get; private set; }
 
-        public IProductRepository Products { get; private set; } 
+        public IProductRepository Products { get; private set; }
 
         public IStorageRepository Storage { get; private set; }
 

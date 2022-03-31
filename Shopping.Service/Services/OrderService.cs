@@ -1,4 +1,5 @@
-﻿using Shopping.Data.IRepositories;
+﻿using AutoMapper;
+using Shopping.Data.IRepositories;
 using Shopping.Domain.Commons;
 using Shopping.Domain.Entities.Orders;
 using Shopping.Service.Interfaces;
@@ -13,39 +14,40 @@ namespace Shopping.Service.Services
     public class OrderService : IOrderService
     {
         private readonly IUnitOfWork unitOfWork;
-        public OrderService(IUnitOfWork unitOfWork) =>
+        private readonly IMapper mapper;
+        public OrderService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
             this.unitOfWork = unitOfWork;
+            this.mapper = mapper; 
+        }
 
 
-        public async Task<BaseResponse<Order>> UpdateAsync(Order customer)
+
+        public async Task<BaseResponse<Order>> UpdateAsync(Order order)
         {
             BaseResponse<Order> baseResponse = new BaseResponse<Order>();
 
-            var entity = await unitOfWork.Orders.GetAsync(obj => obj.Id == customer.Id);
+            var entity = await unitOfWork.Orders.GetAsync(obj => obj.Id == order.Id);
             if (entity is null)
             {
                 baseResponse.Error = new ErrorModel(404, "Order not found");
                 return baseResponse;
             }
 
-            var temp = await unitOfWork.Orders.UpdateAsync(customer);
+            var temp = await unitOfWork.Orders.UpdateAsync(order);
             baseResponse.Data = temp;
             await unitOfWork.SaveChangesAsync();
             return baseResponse;
         }
-        
-        public async Task<BaseResponse<Order>> CreateAsync(OrderCreateViewModel customer)
+
+        public async Task<BaseResponse<Order>> CreateAsync(OrderCreateViewModel order)
         {
             BaseResponse<Order> baseResponse = new BaseResponse<Order>();
 
             try
             {
-                var orderMap = new Order()
-                {
-                    CustomerId = customer.CustomerId,
-                    ProductId = customer.ProductId,
-                    TotalAmount = customer.TotalAmount,
-                };
+                var orderMap = mapper.Map<Order>(order);
+
                 baseResponse.Data = await unitOfWork.Orders.CreateAsync(orderMap);
                 await unitOfWork.SaveChangesAsync();
                 return baseResponse;
@@ -56,7 +58,7 @@ namespace Shopping.Service.Services
                 return baseResponse;
             }
         }
-        
+
         public async Task<BaseResponse<Order>> GetAsync(Expression<Func<Order, bool>> expression)
         {
             BaseResponse<Order> baseResponse = new BaseResponse<Order>();
@@ -71,7 +73,7 @@ namespace Shopping.Service.Services
             baseResponse.Data = entity;
             return baseResponse;
         }
-        
+
         public async Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Order, bool>> expression)
         {
             BaseResponse<bool> baseResponse = new BaseResponse<bool>();
@@ -89,7 +91,7 @@ namespace Shopping.Service.Services
 
             return baseResponse;
         }
-        
+
         public async Task<BaseResponse<IQueryable<Order>>> GetAllAsync(Expression<Func<Order, bool>> expression = null)
         {
             BaseResponse<IQueryable<Order>> baseResponse = new BaseResponse<IQueryable<Order>>();

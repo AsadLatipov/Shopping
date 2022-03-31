@@ -1,11 +1,11 @@
-﻿using Shopping.Data.IRepositories;
+﻿using AutoMapper;
+using Shopping.Data.IRepositories;
 using Shopping.Domain.Commons;
 using Shopping.Domain.Entities.Customers;
 using Shopping.Service.Interfaces;
 using Shopping.Service.ViewModels.Customers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -14,8 +14,13 @@ namespace Shopping.Service.Services
     public class CustomerService : ICustomerService
     {
         private readonly IUnitOfWork unitOfWork;
-        public CustomerService(IUnitOfWork unitOfWork) =>
+        private readonly IMapper mapper;
+        public CustomerService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
             this.unitOfWork = unitOfWork;
+            this.mapper = mapper;
+        }
+       
 
         public async Task<BaseResponse<Customer>> UpdateAsync(Customer customer)
         {
@@ -45,20 +50,13 @@ namespace Shopping.Service.Services
                 return baseResponse;
             }
 
-            var customerMap = new Customer()
-            {
-                Id = customer.Id,
-                FirstName = customer.FirstName,
-                LastName = customer.LastName,
-                Email = customer.Email,
-                Phone = customer.Phone
-            };
+            var customerMap = mapper.Map<Customer>(customer);
 
             baseResponse.Data = await unitOfWork.Customers.CreateAsync(customerMap);
             await unitOfWork.SaveChangesAsync();
             return baseResponse;
         }
-        
+
         public async Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Customer, bool>> expression)
         {
             BaseResponse<bool> baseResponse = new BaseResponse<bool>();
@@ -76,7 +74,7 @@ namespace Shopping.Service.Services
 
             return baseResponse;
         }
-        
+
         public async Task<BaseResponse<Customer>> GetAsync(Expression<Func<Customer, bool>> expression)
         {
             BaseResponse<Customer> baseResponse = new BaseResponse<Customer>();
@@ -92,7 +90,7 @@ namespace Shopping.Service.Services
             return baseResponse;
 
         }
-        
+
         public async Task<BaseResponse<IEnumerable<Customer>>> GetAllAsync(Expression<Func<Customer, bool>> expression = null)
         {
             BaseResponse<IEnumerable<Customer>> baseResponse = new BaseResponse<IEnumerable<Customer>>();

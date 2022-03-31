@@ -2,7 +2,6 @@
 using Shopping.Domain.Entities.Products;
 using Shopping.Domain.Enums;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shopping.Domain.Entities.Storages

@@ -1,8 +1,6 @@
 ﻿using Shopping.Domain.Commons;
 using Shopping.Domain.Enums;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Shopping.Domain.Entities.Customers
 {

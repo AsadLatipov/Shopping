@@ -8,7 +8,6 @@ using Microsoft.OpenApi.Models;
 using Shopping.Data.Contexts;
 using Shopping.Data.IRepositories;
 using Shopping.Data.Repositories;
-using Shopping.Domain.Entities.Customers;
 using Shopping.Service.Interfaces;
 using Shopping.Service.Services;
 
@@ -49,7 +48,7 @@ namespace Shopping.Api
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IStorageService, StorageService>();
             services.AddScoped<IProductService, ProductService>();
-            
+
 
 
         }

@@ -1,4 +1,5 @@
-﻿using Shopping.Data.IRepositories;
+﻿using AutoMapper;
+using Shopping.Data.IRepositories;
 using Shopping.Domain.Commons;
 using Shopping.Domain.Entities.Products;
 using Shopping.Domain.Entities.Storages;
@@ -14,28 +15,32 @@ namespace Shopping.Service.Services
     public class ProductService : IProductService
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IMapper mapper;
 
-        public ProductService(IUnitOfWork unitOfWork) =>
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper)
+        {
             this.unitOfWork = unitOfWork;
-       
+            this.mapper = mapper;
+        }
 
-        public async Task<BaseResponse<Product>> UpdateAsync(Product customer)
+
+        public async Task<BaseResponse<Product>> UpdateAsync(Product product)
         {
             BaseResponse<Product> baseResponse = new BaseResponse<Product>();
 
-            var entity = await unitOfWork.Products.GetAsync(obj => obj.Id == customer.Id);
+            var entity = await unitOfWork.Products.GetAsync(obj => obj.Id == product.Id);
             if (entity is null)
             {
                 baseResponse.Error = new ErrorModel(404, "Product not found");
                 return baseResponse;
             }
 
-            var temp = await unitOfWork.Products.UpdateAsync(customer);
+            var temp = await unitOfWork.Products.UpdateAsync(product);
             baseResponse.Data = temp;
             await unitOfWork.SaveChangesAsync();
             return baseResponse;
         }
-        
+
         public async Task<BaseResponse<Product>> CreateAsync(ProductCreateViewModel product)
         {
             BaseResponse<Product> baseResponse = new BaseResponse<Product>();
@@ -60,14 +65,8 @@ namespace Shopping.Service.Services
             }
 
             //Add products table
-            var productMap = new Product()
-            {
-                Name = product.Name,
-                CompanyName = product.CompanyName,
-                Price = product.Price,
-                ExpiredDate = product.ExpiredDate,
-                AdoptedDate = product.AdoptedDate,
-            };
+            var productMap = mapper.Map<Product>(product);
+
             var temp = await unitOfWork.Products.CreateAsync(productMap);
             await unitOfWork.SaveChangesAsync();
 
@@ -82,7 +81,7 @@ namespace Shopping.Service.Services
             await unitOfWork.SaveChangesAsync();
             return baseResponse;
         }
-        
+
         public async Task<BaseResponse<bool>> DeleteAsync(Expression<Func<Product, bool>> expression)
         {
             BaseResponse<bool> baseResponse = new BaseResponse<bool>();
@@ -101,7 +100,7 @@ namespace Shopping.Service.Services
             return baseResponse;
 
         }
-        
+
         public async Task<BaseResponse<Product>> GetAsync(Expression<Func<Product, bool>> expression)
         {
             BaseResponse<Product> baseResponse = new BaseResponse<Product>();
@@ -116,7 +115,7 @@ namespace Shopping.Service.Services
             baseResponse.Data = entity;
             return baseResponse;
         }
-        
+
         public async Task<BaseResponse<IQueryable<Product>>> GetAllAsync(Expression<Func<Product, bool>> expression = null)
         {
             BaseResponse<IQueryable<Product>> baseResponse = new BaseResponse<IQueryable<Product>>();

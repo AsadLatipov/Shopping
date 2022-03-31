@@ -2,7 +2,7 @@
 {
     public class ErrorModel
     {
-        public ErrorModel(int? code=null, string message=null)
+        public ErrorModel(int? code = null, string message = null)
         {
             Code = code;
             Message = message;

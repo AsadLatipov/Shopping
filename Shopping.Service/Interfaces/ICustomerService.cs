@@ -3,7 +3,6 @@ using Shopping.Domain.Entities.Customers;
 using Shopping.Service.ViewModels.Customers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 

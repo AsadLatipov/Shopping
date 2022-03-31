@@ -27,9 +27,9 @@ namespace Shopping.Api.Controllers
         }
 
         [HttpGet("{order-id}")]
-        public async ValueTask<ActionResult<BaseResponse<Order>>> GetAsync([FromRoute(Name = "order-id")]Guid orderId)
+        public async ValueTask<ActionResult<BaseResponse<Order>>> GetAsync([FromRoute(Name = "order-id")] Guid orderId)
         {
-            var entity = await orderService.GetAsync(obj =>obj.Id == orderId);
+            var entity = await orderService.GetAsync(obj => obj.Id == orderId);
 
             return StatusCode(entity.Code ?? entity.Error.Code.Value, entity);
         }

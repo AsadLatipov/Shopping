@@ -34,7 +34,7 @@ namespace Shopping.Api.Controllers
 
             return StatusCode(entity.Code ?? entity.Error.Code.Value, entity);
         }
-        
+
         [HttpGet]
         public async Task<ActionResult<BaseResponse<IQueryable<Customer>>>> GetAllAsync()
         {
