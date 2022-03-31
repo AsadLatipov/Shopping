@@ -42,9 +42,9 @@ namespace Shopping.Service.Services
         public async Task<BaseResponse<Customer>> CreateAsync(CustomerCreateViewModel customer)
         {
             BaseResponse<Customer> baseResponse = new BaseResponse<Customer>();
-            var entity = unitOfWork.Customers.GetAsync(obj => obj.Phone == customer.Phone);
+            var entity = await unitOfWork.Customers.GetAsync(obj => obj.Phone == customer.Phone);
 
-            if (entity == null)
+            if (entity != null)
             {
                 baseResponse.Error = new ErrorModel(400, "Customer is exsist");
                 return baseResponse;
@@ -52,8 +52,11 @@ namespace Shopping.Service.Services
 
             var customerMap = mapper.Map<Customer>(customer);
 
-            baseResponse.Data = await unitOfWork.Customers.CreateAsync(customerMap);
+            var result = await unitOfWork.Customers.CreateAsync(customerMap);
             await unitOfWork.SaveChangesAsync();
+
+            baseResponse.Data = result;
+
             return baseResponse;
         }
 

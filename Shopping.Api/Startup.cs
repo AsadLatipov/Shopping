@@ -9,6 +9,7 @@ using Shopping.Data.Contexts;
 using Shopping.Data.IRepositories;
 using Shopping.Data.Repositories;
 using Shopping.Service.Interfaces;
+using Shopping.Service.Mappers;
 using Shopping.Service.Services;
 
 namespace Shopping.Api
@@ -19,7 +20,6 @@ namespace Shopping.Api
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -30,7 +30,8 @@ namespace Shopping.Api
             {
                 options.UseNpgsql(Configuration.GetConnectionString("Shopping"));
             });
-
+            
+            
             //Defaults
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -39,6 +40,7 @@ namespace Shopping.Api
             });
 
             //Add my service
+            services.AddAutoMapper(typeof(MappingProfile));
 
             //Repositories
             services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -48,9 +50,6 @@ namespace Shopping.Api
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IStorageService, StorageService>();
             services.AddScoped<IProductService, ProductService>();
-
-
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
